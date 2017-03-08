@@ -1,18 +1,5 @@
 ;;
 
-(defun regular-slide (number name elements)
-  )
-
-(defun chapter-slide (number name)
-  )
-
-(defmacro slide (number name &body elements)
-  (if elements
-      (regular-slide number name elements)
-      (chapter-slide number name)))
-
-;;
-
 (slide 0 "Lisping on the GPU")
 
 (slide 1 "Wat"
@@ -43,5 +30,3 @@
    "• Incrementally Compiled"
    "• Compiled or Interpreted")
   ())
-
-
