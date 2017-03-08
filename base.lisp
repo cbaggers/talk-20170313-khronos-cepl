@@ -48,8 +48,12 @@
 (defun prev-slide ()
   (when (> *slide-num* 0)
     (decf *slide-num*))
-  (setf *group-num* 0)
-  (render-slide))
+  (let ((slide (gethash *slide-num* *slides*)))
+    (setf *group-num*
+          (if slide
+              (1- (length (slot-value slide 'element-groups)))
+              0))
+    (render-slide)))
 
 ;;------------------------------------------------------------
 
