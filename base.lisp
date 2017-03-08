@@ -7,28 +7,26 @@
 (defvar *text-blending-params* (make-blending-params))
 (defvar *slide-viewport* (make-viewport))
 (defvar *frame-bg-color* (v! 0.082 0.082 0.082 0.0))
+(defvar *default-item-font-size* 75)
+(defvar *item-line-spacing* 1.5)
+(defvar *default-chapter-font-size* 110)
+(defvar *default-title-font-size* 100)
 
 (defun add-slide (number slide)
   (let ((current (gethash number *slides*)))
     (when current
-      (free current)))
+      (free current))
+    (when (= number *slide-num*)
+      (setf *group-num* (1- (slide-group-count)))))
   (setf (gethash number *slides*) slide))
 
-(defun render-slide ()
-  (cepl-utils:with-setf (clear-color *cepl-context*) *frame-bg-color*
-    (with-viewport *slide-viewport*
-      (as-frame
-        (let ((slide (gethash *slide-num* *slides*)))
-          (when slide
-            (render slide)))))))
-
-(defmethod render ((obj t))
+(defmethod render-element ((obj t) auto-pos)
   (format t "~%<STUB RENDER ~a>" obj))
 
 (defun next ()
   (let ((slide (gethash *slide-num* *slides*)))
     (when slide
-      (let ((group-count (length (slot-value slide 'element-groups))))
+      (let ((group-count (slide-group-count)))
         (incf *group-num*)
         (if (>= *group-num* group-count)
             (next-slide)
@@ -36,24 +34,28 @@
 
 (defun prev ()
   (decf *group-num*)
-  (if (< *group-num* 0)
+  (if (< *group-num* 1)
       (prev-slide)
       (render-slide)))
 
 (defun next-slide ()
   (incf *slide-num*)
-  (setf *group-num* 0)
+  (if (> (slide-group-count) 0)
+      (setf *group-num* 1)
+      (setf *group-num* 0))
   (render-slide))
 
 (defun prev-slide ()
   (when (> *slide-num* 0)
     (decf *slide-num*))
+  (setf *group-num* (1- (slide-group-count)))
+  (render-slide))
+
+(defun slide-group-count ()
   (let ((slide (gethash *slide-num* *slides*)))
-    (setf *group-num*
-          (if slide
-              (1- (length (slot-value slide 'element-groups)))
-              0))
-    (render-slide)))
+    (if slide
+        (length (slot-value slide 'element-groups))
+        0)))
 
 ;;------------------------------------------------------------
 
@@ -68,12 +70,29 @@
     (loop :for group :in element-groups :do
        (map 'nil #'free group))))
 
-(defmethod render ((obj slide))
-  (with-slots (element-groups) obj
-    (loop :for group :in element-groups :for i :below (1+ *group-num*) :do
-       (loop :for element :in group :do
-          (initialize element)
-          (render element)))))
+(defun render-slide ()
+  (cepl-utils:with-setf (clear-color *cepl-context*) *frame-bg-color*
+    (with-viewport *slide-viewport*
+      (as-frame
+        (let ((slide (gethash *slide-num* *slides*)))
+          (when slide
+            (%render-slide slide)))))))
+
+(defun %render-slide (obj)
+  (let ((pos (v! -0.9 0.85))
+        (vp-size (viewport-resolution (current-viewport))))
+    (labels ((auto-pos (size &optional xpos spacing)
+               (or xpos
+                   (prog1 pos
+                     (incf (y pos)
+                           (* (- (/ (elt size 1) (y vp-size)))
+                              (or spacing *item-line-spacing*)))))))
+      (with-slots (element-groups) obj
+        (loop :for group :in element-groups :for i :below (1+ *group-num*) :do
+           (when group
+             (loop :for element :in group :do
+                (initialize element)
+                (render-element element #'auto-pos))))))))
 
 ;;------------------------------------------------------------
 
@@ -92,7 +111,8 @@
 (defmethod free ((obj frame))
   nil)
 
-(defmethod render ((obj frame))
+(defmethod render-element ((obj frame) auto-pos)
+  (declare (ignore auto-pos))
   (with-slots (func viewport) obj
     (with-viewport viewport
       (cepl-utils:with-setf (clear-color *cepl-context*) *frame-bg-color*
@@ -106,7 +126,7 @@
    (texture :initarg :texture :initform nil)))
 
 (defun make-image (path &optional pos)
-  (make-instance 'image :path path :pos (or pos (v! 0 0))))
+  (make-instance 'image :path path :pos (when pos (v! pos))))
 
 (defmethod initialize ((obj image))
   (with-slots (path texture) obj
@@ -121,10 +141,13 @@
     (when texture
       (free (sampler-texture texture)))))
 
-(defmethod render ((obj image))
+(defmethod render-element ((obj image) auto-pos)
   (with-slots (texture pos) obj
     (with-blending *text-blending-params*
-      (nineveh::draw-tex-at texture pos))))
+      (nineveh::draw-tex-at
+       texture (funcall auto-pos (dimensions
+                                  (sampler-texture texture))
+                        pos)))))
 
 ;;------------------------------------------------------------
 
@@ -142,7 +165,8 @@
       (assert text)
       (setf texture (sample
                      (cepl.sdl2-ttf:text-to-tex
-                      text (get-font "DroidSans-Bold.ttf" 110)
+                      text (get-font "DroidSans-Bold.ttf"
+                                     *default-chapter-font-size*)
                       (v! 250 250 250 0)))))))
 
 (defmethod free ((obj big-text))
@@ -150,75 +174,95 @@
     (when texture
       (free (sampler-texture texture)))))
 
-(defmethod render ((obj big-text))
+(defmethod render-element ((obj big-text) auto-pos)
   (with-slots (texture pos) obj
     (with-blending *text-blending-params*
-      (nineveh::draw-tex-at texture pos))))
+      (nineveh::draw-tex-at
+       texture (funcall auto-pos (dimensions
+                                  (sampler-texture texture))
+                        pos)))))
 
 ;;------------------------------------------------------------
 
 (defclass text ()
   ((text :initarg :text :initform nil)
-   (point-size :initarg :point-size :initform 75)
+   (spacing :initarg :spacing :initform nil)
+   (point-size :initarg :point-size :initform *default-item-font-size*)
    (font-name :initarg :font-name :initform "DroidSans.ttf")
    (pos :initarg :pos :initform (v! 0 0))
    (texture :initarg :texture :initform nil)))
 
 (defun make-text (text
-                  &optional pos (point-size 75) (font-name "DroidSans.ttf"))
+                  &optional pos point-size (font-name "DroidSans.ttf")
+                    spacing)
   (make-instance 'text
                  :text text
                  :font-name font-name
-                 :pos (or pos (v! 0 0))
-                 :point-size point-size))
+                 :pos (when pos (v! pos))
+                 :point-size (or point-size *default-item-font-size*)
+                 :spacing spacing))
 
 (defmethod initialize ((obj text))
   (with-slots (text texture font-name point-size) obj
     (unless texture
       (assert text)
-      (setf texture (sample
-                     (cepl.sdl2-ttf:text-to-tex
-                      text (get-font font-name point-size)
-                      (v! 230 230 230 0))
-                     :wrap :clamp-to-edge)))))
+      (when (> (length text) 0)
+        (setf texture (sample
+                       (cepl.sdl2-ttf:text-to-tex
+                        text (get-font font-name point-size)
+                        (v! 230 230 230 0))
+                       :wrap :clamp-to-edge))))))
 
 (defmethod free ((obj text))
   (with-slots (text texture) obj
     (when texture
-
       (free (sampler-texture texture)))))
 
-(defmethod render ((obj text))
-  (with-slots (texture pos) obj
-    (with-blending *text-blending-params*
-      (nineveh::draw-tex-at texture pos nil))))
+(defmethod render-element ((obj text) auto-pos)
+  (with-slots (texture pos spacing) obj
+    (if texture
+        (with-blending *text-blending-params*
+          (nineveh::draw-tex-at texture
+                                (funcall auto-pos (dimensions
+                                                   (sampler-texture texture))
+                                         pos
+                                         spacing)
+                                nil))
+        (funcall auto-pos '(0 50) nil))))
 
 ;;------------------------------------------------------------
 
-(defmethod parse-element ((element string) pos)
-  `(make-text ,element ,pos 75))
+(defmethod parse-element ((element string))
+  (parse-element `(:text ,element)))
 
-(defmethod parse-element ((element list) pos)
+(defmethod parse-element ((element list))
   (ecase (first element)
+    (:text (destructuring-bind (text &key pos
+                                     size
+                                     spacing
+                                     (font "DroidSans.ttf"))
+               (rest element)
+             `(make-text ,text ',pos ,size ,font ,spacing)))
     (:image (destructuring-bind (path &key pos) (rest element)
-              `(make-image ,path (v! ,@(or pos '(0 0))))))
+              `(make-image ,path ',pos)))
     (:frame (destructuring-bind (func &key pos size) (rest element)
               (assert (eq (first func) 'function) ()
                       "frame arg ~a is not a function literal" func)
               `(make-frame ,(if func
                                 `(lambda () (,(second func)))
                                 #'identity)
-                           ',(or pos '(0 0))
+                           ',pos
                            ',(or size '(200 200)))))))
 
 (defmethod regular-slide ((number integer) (name string) (element-groups list))
   (assert (every #'listp element-groups))
-  (let* ((y 0.85)
-         (foo (loop :for group :in element-groups :collect
-                 (append `(list (make-text ,name (v! -0.9 0.9) 100
-                                           "DroidSans-Bold.ttf"))
-                         (loop :for element :in group :when element :collect
-                            (parse-element element (v! -0.9 (decf y 0.15))))))))
+  (let* ((foo (append `((list (make-text ,name (v! -0.9 0.9)
+                                         *default-title-font-size*
+                                         "DroidSans-Bold.ttf")))
+                      (loop :for group :in element-groups :collect
+                         (cons 'list
+                               (loop :for element :in group :collect
+                                  (when element (parse-element element))))))))
     `(add-slide ,number (make-slide ,@foo))))
 
 (defmethod chapter-slide ((number integer) (name string))
