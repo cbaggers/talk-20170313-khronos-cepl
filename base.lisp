@@ -1,24 +1,29 @@
 (in-package #:talk)
 
 (defvar *slides* (make-hash-table))
+(defvar *pending-slides* nil)
 (defvar *can-switch* t)
 (defvar *slide-num* 0)
 (defvar *group-num* 0)
 (defvar *text-blending-params* (make-blending-params))
 (defvar *slide-viewport* (make-viewport))
-(defvar *frame-bg-color* (v! 0.082 0.082 0.082 0.0))
-(defvar *default-item-font-size* 75)
-(defvar *item-line-spacing* 1.5)
-(defvar *default-chapter-font-size* 110)
-(defvar *default-title-font-size* 100)
+(defparameter *frame-bg-color* (v! 0.082 0.082 0.082 0.0))
+(defparameter *item-line-spacing* 1.5)
+(defparameter *default-item-font-size* 36)
+(defparameter *default-chapter-font-size* 55)
+(defparameter *default-title-font-size* 50)
+
+(defun queue-up-slide-change (number slide)
+  (push (list number slide) *pending-slides*)
+  slide)
 
 (defun add-slide (number slide)
-  (let ((current (gethash number *slides*)))
-    (when current
-      (free current))
+  (let ((old (gethash number *slides*)))
+    (when old
+      (free old))
+    (setf (gethash number *slides*) slide)
     (when (= number *slide-num*)
-      (setf *group-num* (1- (slide-group-count)))))
-  (setf (gethash number *slides*) slide))
+      (setf *group-num* (1- (slide-group-count))))))
 
 (defmethod render-element ((obj t) auto-pos)
   (format t "~%<STUB RENDER ~a>" obj))
@@ -192,12 +197,10 @@
    (pos :initarg :pos :initform (v! 0 0))
    (texture :initarg :texture :initform nil)))
 
-(defun make-text (text
-                  &optional pos point-size (font-name "DroidSans.ttf")
-                    spacing)
+(defun make-text (text &optional pos point-size font-name spacing)
   (make-instance 'text
                  :text text
-                 :font-name font-name
+                 :font-name (or font-name "DroidSans.ttf")
                  :pos (when pos (v! pos))
                  :point-size (or point-size *default-item-font-size*)
                  :spacing spacing))
@@ -263,10 +266,10 @@
                          (cons 'list
                                (loop :for element :in group :collect
                                   (when element (parse-element element))))))))
-    `(add-slide ,number (make-slide ,@foo))))
+    `(queue-up-slide-change ,number (make-slide ,@foo))))
 
 (defmethod chapter-slide ((number integer) (name string))
-  `(add-slide ,number (make-slide (list (make-big-text ,name)))))
+  `(queue-up-slide-change ,number (make-slide (list (make-big-text ,name)))))
 
 ;;------------------------------------------------------------
 
@@ -278,6 +281,9 @@
 ;;------------------------------------------------------------
 
 (nineveh:def-simple-main-loop talk
+  (loop :for pending :in *pending-slides* :do
+     (apply #'add-slide pending))
+  (setf *pending-slides* nil)
   (setf (viewport-dimensions *slide-viewport*)
         (cepl::window-dimensions))
   (render-slide)
