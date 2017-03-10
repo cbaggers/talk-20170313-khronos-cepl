@@ -32,8 +32,8 @@
 (slide 6 "space-boundary-convert"
   ("• Is going to be function with a compiler-macro"
    "• If the argument type is a space it will:"
-   " • Look at the type of the surrounding space
-   " • Look at the type of the argument's space
+   " • Look at the type of the surrounding space"
+   " • Look at the type of the argument's space"
    " • Add an implicit uniform which will call get-transform with the two
        uniforms on the CPU side"))
 

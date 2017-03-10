@@ -1,17 +1,22 @@
 ;; (in-package :talk)
 
-(slide 0 "Varjo")
+
+(slide 0 "Meanwhile"
+  ("- The context switching from lisp to glsl kinda sucked"
+   "- Strings don't compose well")
+  ("(texture tex coords)"
+   "texture(tex, coords);")
+  ("can't be that hard.."))
 
 (slide 1 "Varjo"
-  ("• The context switching from lisp to glsl kinda sucked"
-   "• Strings don't compose well"
-   "• lists to strings can't be that hard.."))
-
-(slide 2 "")
+  ()
+  ("- Standalone project"
+   "- Takes lists, returns glsl (and a bunch of other data)"
+   "- loca"))
 
 (slide ?? "First Class Functions (sorta)"
-  "• Try to avoid #define"
-  "• ")
+  "- Try to avoid #define"
+  "- ")
 
 #||
 

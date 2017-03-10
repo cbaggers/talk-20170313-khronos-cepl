@@ -10,6 +10,26 @@
   ("It's not complicated but not a clear as the grid"
    (:image "kern1.png" :pos (0.0 0.0))))
 
+(slide 3 "Alternative Approach"
+  ("If the trasformation is trivial and tedious, automate."
+   "Let's compile the kernel instead")
+  ("(defun-g <SOME-NAME> ((tex :sampler-2d)"
+   "                      (uv :vec2)"
+   "                      (step :vec2))"
+   "  <THE-BODY>)"))
+
+(slide 4 "The Body"
+  ("(+ <A-BUNCH-OF-CALLS-TO-TEXTURE>)"
+   "- or -"
+   "(/ (+ <A-BUNCH-OF-CALLS-TO-TEXTURE>) <SUM-OF-WEIGHTS>)"))
+
+(slide 5 "The result"
+  ((:frame #'use-kernel)))
+
+(defun use-kernel ()
+  )
+
+
 ;; (slide 3 "Throw a macro into the mix")
 
 (eval-when (:compile-toplevel :load-toplevel :execute)

@@ -9,7 +9,7 @@
                            #:cepl.sdl2-ttf
                            #:classimp #:fn #:named-readtables #:cl-fad
                            #:temporal-functions #:dendrite #:easing
-                           #:swank.live #:pile #:pathology #:completable-types
+                           #:swank.live #:pile #:pathology ;; #:completable-types
                            #:filmic-tone-mapping-operators #:dirt
                            #:nineveh)
   :components ((:file "package")

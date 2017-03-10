@@ -8,7 +8,7 @@
 (defvar *text-blending-params* (make-blending-params))
 (defvar *slide-viewport* (make-viewport))
 (defparameter *frame-bg-color* (v! 0.082 0.082 0.082 0.0))
-(defparameter *item-line-spacing* 1.5)
+(defparameter *item-line-spacing* 3)
 (defparameter *default-item-font-size* 36)
 (defparameter *default-chapter-font-size* 55)
 (defparameter *default-title-font-size* 50)
@@ -150,8 +150,7 @@
   (with-slots (texture pos) obj
     (with-blending *text-blending-params*
       (nineveh::draw-tex-at
-       texture (funcall auto-pos (dimensions
-                                  (sampler-texture texture))
+       texture (funcall auto-pos (dimensions (sampler-texture texture))
                         pos)))))
 
 ;;------------------------------------------------------------
@@ -222,7 +221,7 @@
       (free (sampler-texture texture)))))
 
 (defmethod render-element ((obj text) auto-pos)
-  (with-slots (texture pos spacing) obj
+  (with-slots (texture pos spacing point-size) obj
     (if texture
         (with-blending *text-blending-params*
           (nineveh::draw-tex-at texture
@@ -231,7 +230,7 @@
                                          pos
                                          spacing)
                                 nil))
-        (funcall auto-pos '(0 50) nil))))
+        (funcall auto-pos `(0 ,point-size) nil))))
 
 ;;------------------------------------------------------------
 
@@ -288,11 +287,13 @@
         (cepl::window-dimensions))
   (render-slide)
   (cond
-    ((skitter:key-down-p skitter.sdl2.keys:key.n)
+    ((or (skitter:key-down-p skitter.sdl2.keys:key.n)
+         (skitter:key-down-p skitter.sdl2.keys:key.right))
      (when *can-switch*
        (setf *can-switch* nil)
        (next)))
-    ((skitter:key-down-p skitter.sdl2.keys:key.p)
+    ((or (skitter:key-down-p skitter.sdl2.keys:key.p)
+         (skitter:key-down-p skitter.sdl2.keys:key.left))
      (when *can-switch*
        (setf *can-switch* nil)
        (prev)))
