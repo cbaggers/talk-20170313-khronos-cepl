@@ -14,4 +14,7 @@
                            #:nineveh)
   :components ((:file "package")
                (:file "fonts")
-               (:file "base")))
+               (:file "base")
+               (:file "demos/0")
+               (:file "demos/1")
+               (:file "wip")))

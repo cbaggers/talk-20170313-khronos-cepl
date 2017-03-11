@@ -45,7 +45,7 @@
   ("- Got to be possible to make 'real' stuff")
   ("- something something livecoding"))
 
-(slide 6 "Surprise Lisp Intermission!")
+(slide 6 "Surprise Lisp Intermission!") ;;---15mins going fast
 
 (slide 7 "Speedy Lisp Introduction"
   ()
@@ -96,16 +96,15 @@
   ("")
   ("Can be easier to think of them as hooks into the compiler"))
 
-(slide 12 "4 kinds of macro"
+(slide 12 "Kinds of macro"
   ("Reader Macro (Hook into the parser):"
    (:text "(length [1 2 3 4]) -> 4" :font "DroidSansMono.ttf")
    (:text "{:a 1 :b 2} -> #<HASHTABLE>" :font "DroidSansMono.ttf")))
 
-(slide 13 "4 kinds of macro"
+(slide 13 "Kinds of macro"
   ("Regular Macro (AST Transform):"
    (:text "(or x y)" :font "DroidSansMono.ttf")
    (:text "(let ((tmp0 x))" :font "DroidSansMono.ttf")
-   ""
    (:text "  (if tmp0" :font "DroidSansMono.ttf" :spacing 2)
    (:text "      tmp0" :font "DroidSansMono.ttf" :spacing 2)
    (:text "      (let ((tmp1 y))" :font "DroidSansMono.ttf" :spacing 2)
@@ -113,21 +112,114 @@
    (:text "            tmp1" :font "DroidSansMono.ttf" :spacing 2)
    (:text "            nil))))" :font "DroidSansMono.ttf" :spacing 2)))
 
-(slide 14 "4 kinds of macro"
+(slide 14 "Kinds of macro"
   ("Compiler Macro (Optimize function call site):"
-   (:text "(length [1 2 3 4]) -> 4" :font "DroidSansMono.ttf")
-   (:text "{:a 1 :b 2} -> #<HASHTABLE>" :font "DroidSansMono.ttf")))
+   (:text "(vec 1 2 3)" :font "DroidSansMono.ttf")))
 
-(slide 15 "4 kinds of macro"
-  ("Symbol Macro:"
-   "Cool, but not important for now"))
+(slide 15 "Intermission Over (well done to those who remain)") ;;---30mins going fast
+
+(slide 16 "Bringing GL to Lisp"
+  ("GL is kind of beautiful")
+  ("- Places to store data (buffers/textures)"
+   "- Views on the data (samplers/vaos/ubos)"
+   "- Ways to define & compose functionality (shaders/programs)"
+   "- Things to write data into (FBOs/Render-Buffers")
+  ("The API isn't any kind of beautiful"
+   "- Dead horse"))
+
+(slide 17 "Bringing GL to Lisp"
+  ("Patterns start to appear:")
+  ("- Buffers are raw, but data has structure")
+  ("- Textures are structures of images, and images are 1D->3D arrays")
+  ("- VAOs: GLWiki descibes them using the phrase 'stream of vertices'")
+  ("- No reason not to use Sampler Objects")
+  ("- FBOs are already great :)")
+  ("Only the question of shaders.."))
+
+(slide 18 "Shaders & Pipelines - Bringing Lisp to GL"
+  ("- Strings are weak encryption & compose poorly")
+  ("- All projects seem to grow some way of handling this")
+  ("- Really we are dealing with blocks of functionality")
+  ("- We already have an analogy for that")
+  ("Let's see how we far we can get with functions"))
+
+(slide 19 "Shaders & Pipelines - Functions"
+  ("- What are the differences between regular functions and the main function?")
+  ("- How does the function metaphor work for pipelines?")
+  ("- Are there any advantages to making the pipeline a function?")
+  ("That only leaves the syntax issue."))
+
+(slide 20 "Shaders & Pipelines - The language"
+  ("The mental contex switching of the language was bigger than I expected"
+   "so it became a higher priority.")
+  (""
+   (:text "    (texture tex coords)" :font "DroidSansMono.ttf")
+   (:text "    texture(tex, coords);" :font "DroidSansMono.ttf")
+   "")
+  ("can't be that hard.."))
+
+(slide 21 "Varjo"
+  ()
+  ("- Standalone project"
+   "- Takes lists, returns GLSL (and a bunch of other data)")
+  ("Supports:"
+   "- Type inference (and checking across stages)"
+   "- Macros (all the kinds :])"
+   "- Inline GLSL expressions"
+   "- Serperately defined functions & structs"
+   "- Declarations (compile time metadata)"))
+
+(slide 22 "Too much talking! Demo time")
+
+(slide 23 "Demo 0"
+  ("Let's mess with some primitives"
+   (:frame #'step-demo0 :size (1 1))))
+
+(slide 24 "Demo 1: DSL for Blur Kernels")
+
+(slide 25 "Demo 1: The kernel in the Literature"
+  ("Whenever I saw the literature it showed stuff like this:"
+   (:image "kern0.png" :pos (0.0 -.2))))
+
+(slide 26 "The kernel in code"
+  ("It's not complicated but not "
+   "as clear as the griid"
+   (:image "kern1.png" :pos (0.3 0.0))))
+
+(slide 27 "Let's throw a macro at this"
+  ("If the trasformation is trivial and tedious, automate it."
+   "Let's compile the kernel instead"
+   ""
+   (:text "(defun-g <SOME-NAME> ((tex :sampler-2d)" :font "DroidSansMono.ttf")
+   (:text "                      (uv :vec2)" :font "DroidSansMono.ttf")
+   (:text "                      (step :vec2))" :font "DroidSansMono.ttf")
+   (:text "  <THE-BODY>)" :font "DroidSansMono.ttf")))
+
+(slide 28 "The Body"
+  (""
+   (:text "(+ <A-BUNCH-OF-CALLS-TO-TEXTURE>)" :font "DroidSansMono.ttf")
+   ""
+   "- or -"
+   ""
+   (:text  "(/ (+ <A-BUNCH-OF-CALLS-TO-TEXTURE>) <SUM-OF-WEIGHTS>)" :font "DroidSansMono.ttf")))
+
+(slide 29 "Demo 1"
+  ("Let's make/uncomment it:"
+   (:frame #'step-demo1 :size (1 1))))
+
+;; See Examples Folder
+
+(slide 30 "Thankyou!")
+(slide 31 "Questions?")
 
 
-(slide 15 "Massive Thumb"
-  ("- Does it intrigue you boy?"
-   "- Agony"
-   "- Black voodoo"
-   "- Wet jigsaw puzzle"))
 
-(slide 16 "Thankyou!")
-(slide 17 "Questions?")
+
+;; in case of pile fucking up
+
+(defun rescue-talk ()
+  (setf *cube-stream* (make-stream *cube-lisp-data*))
+  (setf *cube-tex* (dirt:load-image-to-texture "/home/baggers/Code/lisp/talk/wat0.png"))
+  (setf *cube-sampler* (sample *cube-tex*))
+  (setf *slide-num* 23)
+  "let's try that again..")

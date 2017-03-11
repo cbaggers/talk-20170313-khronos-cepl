@@ -79,9 +79,10 @@
   (cepl-utils:with-setf (clear-color *cepl-context*) *frame-bg-color*
     (with-viewport *slide-viewport*
       (as-frame
-        (let ((slide (gethash *slide-num* *slides*)))
-          (when slide
-            (%render-slide slide)))))))
+        (pile:with-tweak
+          (let ((slide (gethash *slide-num* *slides*)))
+            (when slide
+              (%render-slide slide))))))))
 
 (defun %render-slide (obj)
   (let ((pos (v! -0.9 0.85))
@@ -105,10 +106,24 @@
   ((func :initarg :func :initform nil)
    (viewport :initarg :viewport :initform nil)))
 
+(defun update-vp (vp pos size)
+  (let* ((ssize (viewport-resolution (current-viewport)))
+         (new-res (v2:* size ssize))
+         (new-origin (v2:- (v2:* pos ssize)
+                           (v2:/s new-res 2f0))))
+    (setf (viewport-origin vp) new-origin
+          (viewport-resolution vp) new-res)
+    vp))
+
 (defun make-frame (func &optional pos size)
-  (make-instance 'frame :viewport (make-viewport (or size '(200 200))
-                                                 (or pos '(0 0)))
-                 :func func))
+  (let ((vp (make-viewport))
+        (pos (v2:+ (v2:*s (v! (or pos '(0 0))) 0.5)
+                   (v2! 0.5)))
+        (size (v! (or size '(0.5 0.5)))))
+    (flet ((get-vp () (update-vp vp pos size)))
+      (make-instance 'frame
+                     :viewport #'get-vp
+                     :func func))))
 
 (defmethod initialize ((obj frame))
   nil)
@@ -119,7 +134,7 @@
 (defmethod render-element ((obj frame) auto-pos)
   (declare (ignore auto-pos))
   (with-slots (func viewport) obj
-    (with-viewport viewport
+    (with-viewport (funcall viewport)
       (cepl-utils:with-setf (clear-color *cepl-context*) *frame-bg-color*
         (funcall func)))))
 
