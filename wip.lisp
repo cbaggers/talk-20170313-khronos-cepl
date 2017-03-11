@@ -43,9 +43,9 @@
    "    - I want all of it")
   ("- Has to feel like lisp")
   ("- Got to be possible to make 'real' stuff")
-  ("- something something livecoding"))
+  ("- something something livecodingg"))
 
-(slide 6 "Surprise Lisp Intermission!") ;;---15mins going fast
+(slide 6 "Lisp Intermission") ;;---15mins going fast
 
 (slide 7 "Speedy Lisp Introduction"
   ()
@@ -161,13 +161,15 @@
 (slide 21 "Varjo"
   ()
   ("- Standalone project"
-   "- Takes lists, returns GLSL (and a bunch of other data)")
+   "- Takes lists, returns GLSL (and a bunch of other data)"
+   "- Doesnt try to be too clever")
   ("Supports:"
    "- Type inference (and checking across stages)"
    "- Macros (all the kinds :])"
    "- Inline GLSL expressions"
    "- Serperately defined functions & structs"
-   "- Declarations (compile time metadata)"))
+   "- Declarations (compile time metadata)"
+   "- First-class functions (now with caveats!)"))
 
 (slide 22 "Too much talking! Demo time")
 
@@ -183,7 +185,7 @@
 
 (slide 26 "The kernel in code"
   ("It's not complicated but not "
-   "as clear as the griid"
+   "as clear as the grid"
    (:image "kern1.png" :pos (0.3 0.0))))
 
 (slide 27 "Let's throw a macro at this"
@@ -207,10 +209,27 @@
   ("Let's make/uncomment it:"
    (:frame #'step-demo1 :size (1 1))))
 
-;; See Examples Folder
+(slide 30 "Demo 2"
+  ((:frame #'step-lark :pixel-size (1024 768))))
 
-(slide 30 "Thankyou!")
-(slide 31 "Questions?")
+(slide 31 "Mistakes & Failures"
+  ()
+  ("- Still not a graphics programmer :)")
+  ("- The inevitable engine")
+  ("- Livecoding is an approach, not a technology")
+  ("    - Many things fall under the name")
+  ("    - Performance -v- Creativity")
+  ("    - ")
+  ("    - Content is still hard"))
+
+(slide 32 "Is it over yet?")
+
+(slide 33 "..I mean..What next!?")
+
+(slide 34 "Future")
+
+(slide 35 "Thankyou!")
+(slide 36 "Questions?")
 
 
 

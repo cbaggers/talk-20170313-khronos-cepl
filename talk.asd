@@ -11,7 +11,7 @@
                            #:temporal-functions #:dendrite #:easing
                            #:swank.live #:pile #:pathology ;; #:completable-types
                            #:filmic-tone-mapping-operators #:dirt
-                           #:nineveh)
+                           #:nineveh #:lark)
   :components ((:file "package")
                (:file "fonts")
                (:file "base")

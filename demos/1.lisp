@@ -46,8 +46,8 @@
 ;;   (k-edge tex uv step))
 
 ;; (def-g-> apply-kernel ()
-;;   (k-vert :vec2)
-;;   (k-frag :vec2))
+;;   :vertex (k-vert :vec2)
+;;   :fragment (k-frag :vec2))
 
 ;; (map-g #'apply-kernel (nineveh:get-quad-stream-v2)
 ;;        :tex *cube-sampler*

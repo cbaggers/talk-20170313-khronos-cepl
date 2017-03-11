@@ -115,11 +115,13 @@
           (viewport-resolution vp) new-res)
     vp))
 
-(defun make-frame (func &optional pos size)
+(defun make-frame (func &optional pos size pixel-size)
   (let ((vp (make-viewport))
         (pos (v2:+ (v2:*s (v! (or pos '(0 0))) 0.5)
                    (v2! 0.5)))
-        (size (v! (or size '(0.5 0.5)))))
+        (size (if pixel-size
+                  (v! pixel-size)
+                  (v! (or size '(0.5 0.5))))))
     (flet ((get-vp () (update-vp vp pos size)))
       (make-instance 'frame
                      :viewport #'get-vp
@@ -262,14 +264,16 @@
              `(make-text ,text ',pos ,size ,font ,spacing)))
     (:image (destructuring-bind (path &key pos) (rest element)
               `(make-image ,path ',pos)))
-    (:frame (destructuring-bind (func &key pos size) (rest element)
+    (:frame (destructuring-bind (func &key pos size pixel-size) (rest element)
               (assert (eq (first func) 'function) ()
                       "frame arg ~a is not a function literal" func)
+              (assert (not (and size pixel-size)))
               `(make-frame ,(if func
                                 `(lambda () (,(second func)))
                                 #'identity)
                            ',pos
-                           ',(or size '(200 200)))))))
+                           ',(or size (unless pixel-size '(200 200)))
+                           ',pixel-size)))))
 
 (defmethod regular-slide ((number integer) (name string) (element-groups list))
   (assert (every #'listp element-groups))
@@ -313,3 +317,16 @@
        (setf *can-switch* nil)
        (prev)))
     (t (setf *can-switch* t))))
+
+(defun init-lark ()
+  (lark::init-media)
+  (lark::init-misc-data)
+  (lark::init-sky-data)
+  (lark::reshape (v! 1366 768))
+  (setf lark::*regen-light-probe* t)
+  (step-lark)
+  (cls))
+
+(defun step-lark ()
+  (swank.live::continuable (lark::step-game))
+  (swank.live::continuable (lark::render lark::*camera* lark::*game-state*)))
