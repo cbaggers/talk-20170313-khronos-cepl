@@ -79,10 +79,10 @@
   (cepl-utils:with-setf (clear-color *cepl-context*) *frame-bg-color*
     (with-viewport *slide-viewport*
       (as-frame
-        (pile:with-tweak
-          (let ((slide (gethash *slide-num* *slides*)))
-            (when slide
-              (%render-slide slide))))))))
+        ;;(pile:with-tweak)
+		(let ((slide (gethash *slide-num* *slides*)))
+		  (when slide
+			(%render-slide slide)))))))
 
 (defun %render-slide (obj)
   (let ((pos (v! -0.9 0.85))
@@ -316,16 +316,28 @@
      (when *can-switch*
        (setf *can-switch* nil)
        (prev)))
+	((skitter:key-down-p skitter.sdl2.keys:key.r)
+     (when *can-switch*
+       (setf *can-switch* nil)
+       (reshape-lark)))
     (t (setf *can-switch* t))))
 
+(defvar *initd* nil)
+
 (defun init-lark ()
-  (lark::init-media)
-  (lark::init-misc-data)
-  (lark::init-sky-data)
-  (lark::reshape (v! 1366 768))
-  (setf lark::*regen-light-probe* t)
-  (step-lark)
-  (cls))
+  (unless *initd*
+    (lark::init-media)
+    (lark::init-misc-data)
+    (lark::init-sky-data)
+	(cepl:step-host)
+    (reshape-lark)
+    (setf lark::*regen-light-probe* t)
+    (step-lark)
+    (cls)
+    (setf *initd* t)))
+
+(defun reshape-lark ()
+  (lark::reshape (v! (cepl.host:window-size cepl.context::*gl-window*))))
 
 (defun step-lark ()
   (swank.live::continuable (lark::step-game))
