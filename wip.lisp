@@ -2,7 +2,7 @@
 
 (slide 0 "Lisping on the GPU")
 
-(slide 1 "What I'll be yaking about tonight"
+(slide 1 "What I'll be yakking about tonight"
   ("CEPL & Varjo"
    "• What were the original plan?"
    "• What are they now?"
@@ -35,7 +35,7 @@
    "• Incrementally Compiled")
   ("• Compiled or Interpreted (But we only care about compiled for this)"
    "• Declare things to the compiler")
-  ("• Excellent package-manager, ffi, editor intergration, etc etc")
+  ("• Excellent package-manager, ffi, editor integration, etc etc")
   ("• Not an academic toy")
   ("• MACROS :)")) ;; standardization - for industry
 
@@ -127,7 +127,7 @@
   ("Patterns start to appear:")
   ("• Buffers are raw, but data has structure")
   ("• Textures are structures of images, and images are 1D->3D arrays")
-  ("• VAOs: GLWiki descibes them using the phrase 'stream of vertices'")
+  ("• VAOs: GLWiki describes them using the phrase 'stream of vertices'")
   ("• No reason not to use Sampler Objects")
   ("• FBOs are already great :)")
   ("Only the question of shaders.."))
@@ -147,7 +147,7 @@
   ("That only leaves the syntax issue."))
 
 (slide 19 "Shaders & Pipelines - The language"
-  ("The mental contex switching of the language was bigger than I expected"
+  ("The mental context switching of the language was bigger than I expected"
    "so it became a higher priority.")
   (""
    (:text "    (texture tex coords)" :font "DroidSansMono.ttf")
@@ -159,12 +159,12 @@
   ()
   ("• Standalone project"
    "• Takes lists, returns GLSL (and a bunch of other data)"
-   "• Doesnt try to be too clever")
+   "• Doesn't try to be too clever")
   ("Supports:"
    "• Type inference (and checking across stages)"
    "• Macros (all the kinds :])"
    "• Inline GLSL expressions"
-   "• Serperately defined functions & structs"
+   "• Separately defined functions & structs"
    "• Declarations (compile time metadata)"
    "• First-class functions (now with caveats!)"))
 
@@ -186,7 +186,7 @@
    (:image "kern1.png" :pos (0.3 0.0))))
 
 (slide 26 "Let's throw a macro at this"
-  ("If the trasformation is trivial and tedious, automate it."
+  ("If the transformation is trivial and tedious, automate it."
    "Let's compile the kernel instead"
    ""
    (:text "(def-kernel k-edge ()" :font "DroidSansMono.ttf")
@@ -228,7 +228,7 @@
   ("    • Performance -v- Creativity -v- Improvisation")
   ("    • Content is still hard"
    "        • MATLAB")
-  ("    • API concequences of livecoding"
+  ("    • API consequences of livecoding"
    "        • Recreating the recompile loop")
   ("• Dynamically typed code has it's issues"))
 
