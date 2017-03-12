@@ -225,7 +225,7 @@
   ("• The inevitable engine")
   ("• Livecoding is an approach, not a technology")
   ("    • Many things fall under the name")
-  ("    • Performance -v- Creativity")
+  ("    • Performance -v- Creativity -v- Improvisation")
   ("    • Content is still hard"
    "        • MATLAB")
   ("    • API concequences of livecoding"
