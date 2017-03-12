@@ -143,6 +143,7 @@
   ("• What are the differences between regular functions and the main function?")
   ("• How does the function metaphor work for pipelines?")
   ("• Are there any advantages to making the pipeline a function?")
+  ("• How do we use the pipeline?")
   ("That only leaves the syntax issue."))
 
 (slide 19 "Shaders & Pipelines - The language"
@@ -188,6 +189,11 @@
   ("If the trasformation is trivial and tedious, automate it."
    "Let's compile the kernel instead"
    ""
+   (:text "(def-kernel k-edge ()" :font "DroidSansMono.ttf")
+   (:text "  -1 -1 -1" :font "DroidSansMono.ttf")
+   (:text"  -1  8 -1" :font "DroidSansMono.ttf")
+   (:text "  -1 -1 -1)" :font "DroidSansMono.ttf")
+   ""
    (:text "(defun-g <SOME-NAME> ((tex :sampler-2d)" :font "DroidSansMono.ttf")
    (:text "                      (uv :vec2)" :font "DroidSansMono.ttf")
    (:text "                      (step :vec2))" :font "DroidSansMono.ttf")
@@ -195,11 +201,16 @@
 
 (slide 27 "The Body"
   (""
-   (:text "(+ <A-BUNCH-OF-CALLS-TO-TEXTURE>)" :font "DroidSansMono.ttf")
+   (:text "(+ (* <A-CALL-TO-TEXTURE> <SOME-WEIGHT>)" :font "DroidSansMono.ttf")
+   (:text "   (* <A-CALL-TO-TEXTURE> <SOME-WEIGHT>)" :font "DroidSansMono.ttf")
+   (:text "   ..)" :font "DroidSansMono.ttf")
    ""
    "• or -"
    ""
-   (:text  "(/ (+ <A-BUNCH-OF-CALLS-TO-TEXTURE>) <SUM-OF-WEIGHTS>)" :font "DroidSansMono.ttf")))
+   (:text "(/ (+ (* <A-CALL-TO-TEXTURE> <SOME-WEIGHT>)" :font "DroidSansMono.ttf")
+   (:text "      (* <A-CALL-TO-TEXTURE> <SOME-WEIGHT>)" :font "DroidSansMono.ttf")
+   (:text "      ..)" :font "DroidSansMono.ttf")
+   (:text "   <SUM-OF-ALL-THE-WEIGHTS>)" :font "DroidSansMono.ttf")))
 
 (slide 28 "Demo 1"
   ("Let's make/uncomment it:"

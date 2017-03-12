@@ -43,7 +43,7 @@
 ;;           (+ (* vert 0.5) (v2! 0.5))))
 
 ;; (defun-g k-frag ((uv :vec2) &uniform (tex :sampler-2d) (step :vec2))
-;;   (k-edge tex uv step))
+;;   (k-id tex uv step))
 
 ;; (def-g-> apply-kernel ()
 ;;   :vertex (k-vert :vec2)
