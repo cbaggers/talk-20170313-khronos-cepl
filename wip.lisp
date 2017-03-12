@@ -3,9 +3,9 @@
 (slide 0 "Lisping on the GPU")
 
 (slide 1 "What I'll be yakking about tonight"
-  ("CEPL & Varjo"
-   "• What were the original plan?"
-   "• What are they now?"
+  ("CEPL & Varjo - Lispy GL"
+   "• What was the original plan?"
+   "• What is it now?"
    "    • Quick lisp intro"
    "    • Demos"
    "• Where can it go?"))
@@ -17,14 +17,10 @@
    "• Programmer at Fuse (We are hiring!)"
    (:image "fuse0.png" :pos (0 -0.4))))
 
-(slide 3 "Past noodlings"
-  ()
-  ("• BASIC"
-   "    • Small Game Engines"
-   "• C#"
-   "    • XNA")
-  ("• Python"
-   "    • Weee!")) ;; the problem with engines
+(slide 3 "How did this get started?"
+  ("- Frustration from hittings walls in environments")
+  ("- XNA promising but disolved")
+  ("- The two approaches to GL in many libraries"))
 
 (slide 4 "Lisp? Lisp." ;; talk about joe and then lisp itself
   ()
@@ -35,23 +31,23 @@
    "• Incrementally Compiled")
   ("• Compiled or Interpreted (But we only care about compiled for this)"
    "• Declare things to the compiler")
-  ("• Excellent package-manager, ffi, editor integration, etc etc")
-  ("• Not an academic toy")
+  ("• Excellent package-manager, ffi, editor integration, etc etc"
+   (:image "emacs0.png" :pos (0.8 -0.55)))
+  ("• Not an academic curiosity")
   ("• MACROS :)")) ;; standardization - for industry
 
 (slide 5 "What to make?"
-  ()
+  ((:image "lego0.png" :pos (0 -0.5)))
   ("• Not an Engine"
    "• Don't hide GL"
    "    • I want all of it")
   ("• Has to feel like lisp")
   ("• Got to be possible to make 'real' stuff")
-  ("• something something livecodingg"))
+  ("• something something livecodingg")) ;;---11mins going fast
 
-(slide 6 "Lisp Intermission") ;;---11mins going fast
+(slide 6 "Lisp Intermission")
 
 (slide 7 "Speedy Lisp Introduction"
-  ()
   ("After the reader has done it's thing..")
   ("Evaluation Basics:")
   ((:text "1 -> 1" :font "DroidSansMono.ttf")
@@ -71,11 +67,12 @@
 (slide 9 "Speedy Lisp Introduction"
   ("Evaluation Basics (quasi-quote):")
   ((:text "'((+ 1 2) (+ 1 2)) -> ((+ 1 2) (+ 1 2))" :font "DroidSansMono.ttf")
-   (:text "`((+ 1 2) ,(+ 1 2)) -> ((+ 1 2) 3)" :font "DroidSansMono.ttf")))
+   (:text "`((+ 1 2) ,(+ 1 2)) -> ((+ 1 2) 3)" :font "DroidSansMono.ttf")
+   (:image "parens0.png" :pos (0 -0.3))))
 
 (slide 10 "And that's how it works!"
   ()
-  ("..except for when it isn't :|")
+  ("..except for when it isn't  :|")
   ("Evaluation Basics (special-forms):")
   ((:text "(if (the-reds-are-coming)" :font "DroidSansMono.ttf")
    (:text "    (fire-ze-missiles)" :font "DroidSansMono.ttf" :spacing 2)
@@ -120,7 +117,8 @@
    "• Views on the data (samplers/vaos/ubos)"
    "• Ways to define & compose functionality (shaders/programs)"
    "• Things to write data into (FBOs/Render-Buffers)")
-  ("The API isn't any kind of beautiful"
+  (""
+   "The API isn't any kind of beautiful"
    "• Dead horse"))
 
 (slide 16 "Bringing GL to Lisp"
