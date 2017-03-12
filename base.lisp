@@ -298,7 +298,7 @@
 
 ;;------------------------------------------------------------
 
-(nineveh:def-simple-main-loop talk
+(nineveh:def-simple-main-loop talk (:on-start #'init-lark)
   (loop :for pending :in *pending-slides* :do
      (apply #'add-slide pending))
   (setf *pending-slides* nil)

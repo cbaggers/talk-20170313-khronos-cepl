@@ -34,7 +34,8 @@
    "- Incrementally Compiled")
   ("- Compiled or Interpreted")
   ("- Declare things to the compiler")
-  ("- MACROS   :-)"))  ;; standardization - for industry
+  ("- Excellent package-manager, ffi, editor intergration, etc etc")
+  ("- MACROS   :)"))  ;; standardization - for industry
 
 (slide 5 "What to make?"
   ()
@@ -212,33 +213,29 @@
 (slide 30 "Demo 2"
   ((:frame #'step-lark :pixel-size (1024 768))))
 
-(slide 31 "Mistakes & Failures"
+(slide 31 "Issues, Mistakes & Failures"
   ()
   ("- Still not a graphics programmer :)")
   ("- The inevitable engine")
   ("- Livecoding is an approach, not a technology")
   ("    - Many things fall under the name")
   ("    - Performance -v- Creativity")
-  ("    - ")
-  ("    - Content is still hard"))
+  ("    - Content is still hard"
+   "        - MATLAB")
+  ("    - API concequences of livecoding"
+   "        - Recreating the recompile loop")
+  ("- Dynamically typed code has it's issues"))
 
 (slide 32 "Is it over yet?")
 
 (slide 33 "..I mean..What next!?")
 
-(slide 34 "Future")
+(slide 34 "Future"
+  ("- Keep fleshing out CEPL & Varjo (GL & Lisp sides)"
+   "- More surrounding libraries"
+   "- Alternate type systems"
+   "- Make stuff and explore live-coding some more"))
 
 (slide 35 "Thankyou!")
+
 (slide 36 "Questions?")
-
-
-
-
-;; in case of pile fucking up
-
-(defun rescue-talk ()
-  (setf *cube-stream* (make-stream *cube-lisp-data*))
-  (setf *cube-tex* (dirt:load-image-to-texture "/home/baggers/Code/lisp/talk/wat0.png"))
-  (setf *cube-sampler* (sample *cube-tex*))
-  (setf *slide-num* 23)
-  "let's try that again..")
