@@ -189,7 +189,7 @@
    ""
    (:text "(def-kernel k-edge ()" :font "DroidSansMono.ttf")
    (:text "  -1 -1 -1" :font "DroidSansMono.ttf")
-   (:text"  -1  8 -1" :font "DroidSansMono.ttf")
+   (:text "  -1  8 -1" :font "DroidSansMono.ttf")
    (:text "  -1 -1 -1)" :font "DroidSansMono.ttf")
    ""
    (:text "(defun-g <SOME-NAME> ((tex :sampler-2d)" :font "DroidSansMono.ttf")
@@ -215,7 +215,7 @@
    (:frame #'step-demo1 :size (1 1))))
 
 (slide 29 "Demo 2"
-  ((:frame #'step-lark :pixel-size (1024 768))))
+  ("This was the PBR slide but I've remove it as the dependency is a bit crazy"))
 
 (slide 30 "Issues, Mistakes & Failures"
   ()

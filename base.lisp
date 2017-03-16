@@ -77,12 +77,12 @@
 
 (defun render-slide ()
   (cepl-utils:with-setf (clear-color *cepl-context*) *frame-bg-color*
-    (with-viewport *slide-viewport*
-      (as-frame
-        ;;(pile:with-tweak)
-		(let ((slide (gethash *slide-num* *slides*)))
-		  (when slide
-			(%render-slide slide)))))))
+                        (with-viewport *slide-viewport*
+                          (as-frame
+                           ;;(pile:with-tweak)
+                           (let ((slide (gethash *slide-num* *slides*)))
+                             (when slide
+                               (%render-slide slide)))))))
 
 (defun %render-slide (obj)
   (let ((pos (v! -0.9 0.85))
@@ -138,7 +138,7 @@
   (with-slots (func viewport) obj
     (with-viewport (funcall viewport)
       (cepl-utils:with-setf (clear-color *cepl-context*) *frame-bg-color*
-        (funcall func)))))
+                            (funcall func)))))
 
 ;;------------------------------------------------------------
 
@@ -298,7 +298,7 @@
 
 ;;------------------------------------------------------------
 
-(nineveh:def-simple-main-loop talk (:on-start #'init-lark)
+(nineveh:def-simple-main-loop talk ()
   (loop :for pending :in *pending-slides* :do
      (apply #'add-slide pending))
   (setf *pending-slides* nil)
@@ -316,29 +316,6 @@
      (when *can-switch*
        (setf *can-switch* nil)
        (prev)))
-	((skitter:key-down-p skitter.sdl2.keys:key.r)
-     (when *can-switch*
-       (setf *can-switch* nil)
-       (reshape-lark)))
     (t (setf *can-switch* t))))
 
 (defvar *initd* nil)
-
-(defun init-lark ()
-  (unless *initd*
-    (lark::init-media)
-    (lark::init-misc-data)
-    (lark::init-sky-data)
-	(cepl:step-host)
-    (reshape-lark)
-    (setf lark::*regen-light-probe* t)
-    (step-lark)
-    (cls)
-    (setf *initd* t)))
-
-(defun reshape-lark ()
-  (lark::reshape (v! (cepl.host:window-size cepl.context::*gl-window*))))
-
-(defun step-lark ()
-  (swank.live::continuable (lark::step-game))
-  (swank.live::continuable (lark::render lark::*camera* lark::*game-state*)))
