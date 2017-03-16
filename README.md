@@ -9,3 +9,9 @@ Warning, this is not how you should make this kind of stuff, I just messed aroun
 It has dependencies on some libraries which are here on github but not in quicklisp (for good reason, they are not in the right shape yet) and use a few functions that aren't exported yet, but whatever, it did the job and you've had enough reading about how I disavow this code :p
 
 Enjoy!
+
+## License
+
+All code herin is Licensed under the GPLv3 (see the LICENSE file)
+
+The pngs were just taken from google image searches, I don't own them and sadly didn't note down who I should credit. I'll get better at that next time.
