@@ -10,6 +10,13 @@ It has dependencies on some libraries which are here on github but not in quickl
 
 Enjoy!
 
+## Using it
+```
+(ql:quickload :talk)
+(in-package :talk)
+(talk :start)
+```
+
 ## License
 
 All code herin is Licensed under the GPLv3 (see the LICENSE file)
