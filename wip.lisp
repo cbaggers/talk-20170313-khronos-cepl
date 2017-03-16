@@ -22,7 +22,7 @@
   ("- XNA promising but disolved")
   ("- The two approaches to GL in many libraries"))
 
-(slide 4 "Lisp? Lisp." ;; talk about joe and then lisp itself
+(slide 4 "Lisp? Lisp."
   ()
   ("History is all well and good, but not for this talk.")
   ("Common Lisp:"
@@ -34,7 +34,7 @@
   ("• Excellent package-manager, ffi, editor integration, etc etc"
    (:image "emacs0.png" :pos (0.8 -0.55)))
   ("• Not an academic curiosity")
-  ("• MACROS :)")) ;; standardization - for industry
+  ("• MACROS :)"))
 
 (slide 5 "What to make?"
   ((:image "lego0.png" :pos (0 -0.5)))
@@ -137,7 +137,7 @@
   ("• We already have an analogy for that")
   ("Let's see how we far we can get with functions"))
 
-(slide 18 "Shaders & Pipelines - Functions"  ;; {TODO} example code image
+(slide 18 "Shaders & Pipelines - Functions"
   ("• What are the differences between regular functions and the main function?")
   ("• How does the function metaphor work for pipelines?")
   ("• Are there any advantages to making the pipeline a function?")
